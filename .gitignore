@@ -1,0 +1,29 @@
+# --- IntelliJ & VS Code ---
+.idea/
+.vscode/
+*.swp
+*.iml
+
+# --- Java & Spring Boot ---
+.gradle/
+build/
+out/
+bin/
+target/
+!gradle-wrapper.jar
+
+# --- Node.js & React ---
+node_modules/
+dist/
+coverage/
+
+# --- 🔐 SECRETS (절대 업로드 금지) ---
+.env
+.env.local
+**/*.key
+**/*.pem
+
+backend/src/main/resources/application.yml
+backend/src/main/resources/application-prod.yml
+
+!backend/src/main/resources/application.example.yml
