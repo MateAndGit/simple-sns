@@ -33,18 +33,17 @@ public class FeedController {
         return ResponseEntity.ok("피드 작성 성공!");
     }
 
-    @GetMapping
-    public ResponseEntity<?> getMyFeeds(
+    @GetMapping("/timeline")
+    public ResponseEntity<Page<FeedResponse>> getTimeline(
             @RequestParam Long userId,
-            @PageableDefault(size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable  pageable
-            ) {
-
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        // Rate Limiter 체크 로직은 그대로 유지!
         if (!rateLimiter.isAllowed(userId)) {
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body("요청 횟수가 너무 많습니다. 잠시 후 다시 시도해주세요.");
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
 
-        Page<FeedResponse> feeds = feedService.getMyFeeds(userId, pageable);
+        Page<FeedResponse> feeds = feedService.getTimeline(userId, pageable);
         return ResponseEntity.ok(feeds);
     }
 }
