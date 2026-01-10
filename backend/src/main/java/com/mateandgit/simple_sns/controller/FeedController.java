@@ -38,12 +38,20 @@ public class FeedController {
             @RequestParam Long userId,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        // Rate Limiter 체크 로직은 그대로 유지!
         if (!rateLimiter.isAllowed(userId)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
 
         Page<FeedResponse> feeds = feedService.getTimeline(userId, pageable);
+        return ResponseEntity.ok(feeds);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<FeedResponse>> searchFeeds(
+            @RequestParam String keyword,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<FeedResponse> feeds = feedService.searchFeeds(keyword, pageable);
         return ResponseEntity.ok(feeds);
     }
 }

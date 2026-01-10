@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface FeedRepository extends JpaRepository<Feed, Long> {
     Page<Feed> findAllByUserOrderByCreatedAtDesc(User user, Pageable pageable);
-
     Page<Feed> findAllByUserInOrderByCreatedAtDesc(List<User> users, Pageable pageable);
+    Page<Feed> findByContentContainingOrderByCreatedAtDesc(String keyword, Pageable pageable);
 }
