@@ -9,6 +9,7 @@ import com.mateandgit.simple_sns.repository.FeedRepository;
 import com.mateandgit.simple_sns.repository.FollowRepository;
 import com.mateandgit.simple_sns.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -64,5 +66,13 @@ public class FeedService {
         Page<Feed> feeds = feedRepository.findAllByUserInOrderByCreatedAtDesc(followingUsers, pageable);
 
         return feeds.map(FeedResponse::new);
+    }
+
+    public Page<FeedResponse> searchFeeds(String keyword, Pageable pageable) {
+        log.info("[SEARCH] keyword: {}", keyword);
+
+        Page<Feed> feeds = feedRepository.findByContentContainingOrderByCreatedAtDesc(keyword, pageable);
+        return feeds.map(FeedResponse::new);
+
     }
 }

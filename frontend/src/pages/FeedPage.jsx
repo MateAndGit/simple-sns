@@ -5,6 +5,7 @@ function FeedPage() {
   const [feeds, setFeeds] = useState([]);
   const [content, setContent] = useState("");
   const [targetId, setTargetId] = useState(""); // 팔로우할 대상 ID
+  const [keyword, setKeyword] = useState("");
 
   // 테스트를 위해 현재 로그인한 유저를 1번으로 가정
   const myId = 1;
@@ -57,6 +58,22 @@ function FeedPage() {
     }
   };
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!keyword.trim()) {
+      fetchFeeds();
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/feeds/search?keyword=${keyword}`
+      );
+      setFeeds(response.data.content);
+    } catch (error) {
+      alert("검색 실패 ㅠㅠ");
+    }
+  };
+
   useEffect(() => {
     fetchFeeds();
   }, []);
@@ -65,6 +82,19 @@ function FeedPage() {
     <div style={{ padding: "20px", maxWidth: "600px", margin: "0 auto" }}>
       <h1>SNS 타임라인 🕒</h1>
       <p>현재 로그인 유저: {myId}번</p>
+
+      <form
+        onSubmit={handleSearch}
+        style={{ marginBottom: "20px", display: "flex", gap: "5px" }}
+      >
+        <input
+          placeholder="검색어를 입력하세요 (예: 안녕)"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          style={{ padding: "10px", flex: 1 }}
+        />
+        <button type="submit">검색 🔍</button>
+      </form>
 
       {/* 팔로우 섹션 */}
       <div
